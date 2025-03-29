@@ -1,0 +1,43 @@
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+
+#define MAX 10
+
+int main() {
+    char production[MAX][MAX];
+    char first[MAX][MAX];
+    int numProductions;
+    
+    printf("Enter the number of productions: ");
+    scanf("%d", &numProductions);
+    getchar();
+    
+    printf("Enter the productions (e for epsilon):\n");
+    for (int i = 0; i < numProductions; i++) {
+        fgets(production[i], MAX, stdin);
+        production[i][strcspn(production[i], "\n")] = '\0';
+    }
+    
+    for (int i = 0; i < numProductions; i++) {
+        printf("FIRST(%c) = { ", production[i][0]);
+        
+        if (!isupper(production[i][2])) {
+            strncat(first[i], &production[i][2], 1);
+        } else {
+            for (int j = 0; j < numProductions; j++) {
+                if (production[j][0] == production[i][2]) {
+                    if (production[j][2] == '\0' || production[j][2] == 'e') {
+                        strncat(first[i], "e", 1);
+                    } else {
+                        strncat(first[i], &production[j][2], 1);
+                    }
+                }
+            }
+        }
+        
+        printf("%s }\n", first[i]);
+    }
+    
+    return 0;
+}
